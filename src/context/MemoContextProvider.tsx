@@ -3,57 +3,6 @@ import React, {
     createContext
 } from 'react'
 import { IMemo as Memo} from '../models/Memo'
-import { v4 as uuidv4 } from "uuid";
-
-const initState = {
-    memos: [
-        {
-            id: "1",
-            name: "11",
-            description: "111",
-            categories: [],
-            isRead: false,
-            url: "",
-            referred_by: [],
-            refers_to: []
-        },
-        {
-            id: "2",
-            name: "22",
-            description: "222",
-            referred_by: [],
-            refers_to: []
-        },
-        {
-            id: "3",
-            name: "33",
-            description: "333",
-            referred_by: [],
-            refers_to: []
-        },
-        {
-            id: "4",
-            name: "44",
-            description: "444",
-            referred_by: [],
-            refers_to: []
-        },
-        {
-            id: "5",
-            name: "55",
-            description: "555",
-            referred_by: [],
-            refers_to: []
-        },
-        {
-            id: "6",
-            name: "66",
-            description: "666",
-            referred_by: [],
-            refers_to: []
-        }
-    ]
-}
 
 const defaultState: Memo[] = [
     {
@@ -84,26 +33,33 @@ export const MemoContext = createContext<{
     dispatch: () => null
 })
 
-type ActionType = {
-    type: 'ADD_MEMO' | 'UPDATE_MEMO' | 'DELETE_MEMO'
+export enum ActionType {
+    Add,
+    Update,
+    Delete
+}
+
+type Action = {
+    type: ActionType.Add | ActionType.Update | ActionType.Delete
     payload: any
 }
 
-const reducer = (state: typeof defaultState, action: ActionType) => {
+const reducer = (state: typeof defaultState, action: Action) => {
     switch (action.type) {
-        case 'ADD_MEMO':
+        case ActionType.Add:
             return [...state, action.payload]
-        case 'UPDATE_MEMO':
+        case ActionType.Update:
             return state.map((memo: Memo) => {
                 if (memo.id === action.payload.id) {
                     memo = action.payload
                 }
                 return memo
             })
-        case 'DELETE_MEMO': 
+        case ActionType.Delete: 
             return state.filter((memo: Memo) => memo.id !== action.payload)
+        default:
+            return state
     }
-    return state
 }
 
 export const MemoContextProvider: React.FC = (props) => {

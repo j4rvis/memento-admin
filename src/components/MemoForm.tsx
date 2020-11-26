@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
-import { MemoContext } from "../context/MemoContextProvider";
-import { IMemo as Memo, NewMemo } from "../models/Memo";
+import { MemoContext, ActionType } from "../context/MemoContextProvider";
+import { IMemo as Memo } from "../models/Memo";
+import {Button, Checkbox, FormControlLabel, TextField} from '@material-ui/core';
 
-export default () => {
+export const MemoForm = () => {
   const {dispatch} = useContext(MemoContext)
   
   const [memo, setMemo] = useState({} as Memo)
@@ -33,7 +34,7 @@ export default () => {
   const handleAddMemo = () => {
 
     dispatch({
-      type: "ADD_MEMO",
+      type: ActionType.Delete,
       payload: memo,
     });
 
@@ -41,27 +42,16 @@ export default () => {
   };
 
   return (
-    <div className="memo-form">
-      <label>Add Memo:</label>
-      <div className="form-input">
-        <label>Name:</label>
-        <input type="text" value={memo.name} name="name" placeholder="Name" onChange={handleInputChange} />
-      </div>
-      <div className="form-input">
-        <label>Description:</label>
-        <input type="text" value={memo.description} name="description" placeholder="Description" onChange={handleInputChange} />
-      </div>
-      <div className="form-input">
-        <label>URL:</label>
-        <input type="url" value={memo.url} name="url" placeholder="URL" onChange={handleInputChange} />
-      </div>
-      <div className="form-input">
-        <label>IsRead:</label>
-        <input type="checkbox" value={String(memo.isRead)} name="isRead" placeholder="IsRead?" onChange={handleInputChange} />
-      </div>
-      <button type="button" onClick={handleAddMemo}>
-        Add Memo
-      </button>
-    </div>
+    <form className="memo-form" autoComplete="off">
+      <TextField label='Name' variant="outlined" onChange={handleInputChange} value={memo.name} name="name"/>
+      <TextField label='Description' variant="outlined" onChange={handleInputChange} value={memo.description} name="description"/>
+      <TextField label='URL' variant="outlined" onChange={handleInputChange} value={memo.url} name="url"/>
+      <FormControlLabel
+        control={
+          <Checkbox color="primary" onChange={handleInputChange} value={String(memo.isRead)} name="isRead" />
+        } 
+        label="IsRead"/>
+      <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
+    </form>
   )
 }

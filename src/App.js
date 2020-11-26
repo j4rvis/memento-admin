@@ -1,6 +1,6 @@
 import React from 'react'
-import MemoList from './components/MemoList';
-import MemoForm from './components/MemoForm';
+import { MemoList } from './components/MemoList';
+import { MemoForm } from './components/MemoForm';
 import { MemoContextProvider } from "./context/MemoContextProvider";
 import "./App.css"
 

@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-import { MemoContext } from "../context/MemoContextProvider";
-import { IMemo as Memo} from "../models/Memo";
+import { MemoContext, ActionType } from "../context/MemoContextProvider";
+import { IMemo as Memo } from "../models/Memo";
 
-export default () => {
+export const MemoList = () => {
   const {state, dispatch} = useContext(MemoContext)
 
   const handleDeleteMemo = (memo: Memo) => {
     dispatch({
-      type: "DELETE_MEMO",
+      type: ActionType.Delete,
       payload: memo,
     });
   };
