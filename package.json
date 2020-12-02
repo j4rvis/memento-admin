@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.1",
+    "@material-ui/data-grid": "^4.0.0-alpha.10",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/system": "^4.9.14",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.0",
     "@testing-library/user-event": "^12.2.2",
@@ -13,6 +16,7 @@
     "@types/react-dom": "^16.9.9",
     "@types/uuid": "^8.3.0",
     "fontsource-roboto": "^3.0.3",
+    "lorem-ipsum": "^2.0.3",
     "material-components-web": "^8.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

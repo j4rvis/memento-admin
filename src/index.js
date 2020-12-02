@@ -3,11 +3,23 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import 'fontsource-roboto';
 import reportWebVitals from './reportWebVitals';
+import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { green, amber } from '@material-ui/core/colors';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: green,
+    secondary: amber,
+  }
+})
+
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
     <App />
-  </React.StrictMode>,
+  </ThemeProvider>,
   document.getElementById('root')
 );
 

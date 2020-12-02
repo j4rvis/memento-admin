@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { MemoContext, ActionType } from "../context/MemoContextProvider";
 import { IMemo as Memo } from "../models/Memo";
-import {Button, Checkbox, FormControlLabel, TextField} from '@material-ui/core';
+import { Card, Button, Checkbox, FormControlLabel, TextField, CardContent, Grid} from '@material-ui/core';
 
 export const MemoForm = () => {
   const {dispatch} = useContext(MemoContext)
@@ -42,16 +42,18 @@ export const MemoForm = () => {
   };
 
   return (
-    <form className="memo-form" autoComplete="off">
-      <TextField label='Name' variant="outlined" onChange={handleInputChange} value={memo.name} name="name"/>
-      <TextField label='Description' variant="outlined" onChange={handleInputChange} value={memo.description} name="description"/>
-      <TextField label='URL' variant="outlined" onChange={handleInputChange} value={memo.url} name="url"/>
-      <FormControlLabel
-        control={
-          <Checkbox color="primary" onChange={handleInputChange} value={String(memo.isRead)} name="isRead" />
-        } 
-        label="IsRead"/>
-      <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
-    </form>
+    <Card>
+      <CardContent>
+        <TextField label='Name' variant="outlined" onChange={handleInputChange} value={memo.name} name="name"/>
+        <TextField label='Description' variant="outlined" onChange={handleInputChange} value={memo.description} name="description"/>        
+        <TextField label='URL' variant="outlined" onChange={handleInputChange} value={memo.url} name="url"/>
+        <FormControlLabel
+          control={
+            <Checkbox color="primary" onChange={handleInputChange} value={String(memo.isRead)} name="isRead" />
+          } 
+          label="IsRead"/>
+        <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
+      </CardContent>
+    </Card>
   )
 }
