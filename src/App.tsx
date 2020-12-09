@@ -1,8 +1,9 @@
-import React from 'react'
-import { MemoList } from './components/MemoList';
+import React, { useContext } from 'react'
+import { MemoDataGrid } from './components/MemoDataGrid';
 import { MemoForm } from './components/MemoForm';
-import { MemoContextProvider } from "./context/MemoContextProvider";
-import { Box, BottomNavigation, BottomNavigationAction, Fab } from '@material-ui/core';
+import { MemoView } from './components/MemoView';
+import { MemoContext, MemoContextProvider } from "./context/MemoContextProvider";
+import { Box, BottomNavigation, BottomNavigationAction, Fab, Card, CardContent } from '@material-ui/core';
 import { Restore, Favorite, LocationOn, Add} from '@material-ui/icons';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 
@@ -37,11 +38,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App = () => {
   const classes = useStyles();
+  const {state, dispatch} = useContext(MemoContext)
   return (
     <MemoContextProvider>
       <Box className={classes.root}>
-        <MemoForm />
-        <MemoList />
+        <MemoForm prefilledMemo={state[0]}/>
+        <Card>
+          <CardContent>
+            <MemoView memo={state[0]}/>
+          </CardContent>
+        </Card>
+        <MemoDataGrid />
       </Box>
       <BottomNavigation className={classes.bottomNav} showLabels >
         <BottomNavigationAction label="Recents" icon={<Restore />} />

@@ -1,58 +1,79 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, FormEvent, ChangeEvent } from "react";
 import { MemoContext, ActionType } from "../context/MemoContextProvider";
 import { IMemo as Memo } from "../models/Memo";
-import { Card, Button, Checkbox, FormControlLabel, TextField, CardContent, Grid} from '@material-ui/core';
+import { Card, Button, Checkbox, FormControlLabel, TextField, CardContent, Grid, makeStyles, Theme, createStyles, Typography, Box} from '@material-ui/core';
 
-export const MemoForm = () => {
+type FormProps = {
+  prefilledMemo?: Memo
+}
+
+export const MemoForm = ({prefilledMemo}: FormProps) => {
   const {dispatch} = useContext(MemoContext)
-  
-  const [memo, setMemo] = useState({} as Memo)
+  const [memo, setMemo] = useState(prefilledMemo || {} as Memo)
 
-  const handleInputChange = (e: any) => {
-    const {name, value} = e.target
-    switch(name) {
-      case "name":
-        memo.name = value
-        break
-      case "description":
-        memo.description = value
-        break
-      case "isRead":
-        memo.isRead = value
-        break
-      case "url":
-        memo.url = value
-        break
-    }
-    setMemo(memo)
-  };
-
-  const resetInput = () => {
-    setMemo({} as Memo)
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setMemo({
+      ...memo,
+      [event.target.name]: event.target.value
+    });
   }
 
-  const handleAddMemo = () => {
+  const handleAddMemo = (e: FormEvent) => {
+    e.preventDefault()
+    alert(JSON.stringify(memo, null, 4))
 
-    dispatch({
-      type: ActionType.Delete,
-      payload: memo,
-    });
+    // dispatch({
+    //   type: ActionType.Add,
+    //   payload: memo,
+    // });
 
-    resetInput();
+    // resetInput();
   };
 
+  const dateLabels = (date: Date, label: string) => {
+    if (!date) return
+    return (
+      <Box>
+        <Typography variant='subtitle1'>{label}</Typography>
+        <Typography variant='body2'>{String(date)}</Typography>
+      </Box>
+    )
+  }
+
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        display: 'flex',
+        flexDirection: 'column',
+        '& > div, label': {
+          marginBottom: theme.spacing(2)
+        }
+      }
+    })
+  )
+
+  const classes = useStyles()
   return (
     <Card>
-      <CardContent>
-        <TextField label='Name' variant="outlined" onChange={handleInputChange} value={memo.name} name="name"/>
-        <TextField label='Description' variant="outlined" onChange={handleInputChange} value={memo.description} name="description"/>        
-        <TextField label='URL' variant="outlined" onChange={handleInputChange} value={memo.url} name="url"/>
-        <FormControlLabel
-          control={
-            <Checkbox color="primary" onChange={handleInputChange} value={String(memo.isRead)} name="isRead" />
-          } 
-          label="IsRead"/>
-        <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
+      <CardContent >
+        <form className={classes.root} autoComplete="off">
+          <TextField label='Name' multiline variant='outlined' onChange={handleChange} value={memo.name} name="name"/>
+          <TextField label='Description' multiline variant='outlined' onChange={handleChange} value={memo.description} name="description"/>        
+          <TextField label='URL' multiline variant='outlined' onChange={handleChange} value={memo.url} name="url"/>
+          <FormControlLabel
+            control={
+              <Checkbox color="primary" onChange={handleChange} value={String(memo.isRead)} name="isRead" />
+            } 
+            label="IsRead"/>
+          <FormControlLabel
+            control={
+              <Checkbox color="primary" onChange={handleChange} value={String(memo.isCategory)} name="isCategory" />
+            } 
+            label="IsCategory"/>
+          { dateLabels(memo.createdAt, 'CreatedAt') }
+          { dateLabels(memo.updatedAt, 'UpdatedAt') }
+          <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
+        </form>
       </CardContent>
     </Card>
   )

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { MemoContext, ActionType } from "../context/MemoContextProvider";
 import { IMemo as Memo } from "../models/Memo";
 import { Card, CardContent, Typography } from '@material-ui/core';
-import { DataGrid, ColDef, ValueFormatterParams, RowSelectedParams, RowParams } from '@material-ui/data-grid';
+import { DataGrid, ColDef, ValueFormatterParams, RowParams } from '@material-ui/data-grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
 
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export const MemoList = () => {
+export const MemoDataGrid = () => {
   const classes = useStyles()
   const {state, dispatch} = useContext(MemoContext)
 
@@ -26,13 +26,18 @@ export const MemoList = () => {
   };
 
   const columns: ColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80, hide: true },
+    { field: 'id', headerName: 'ID', width: 80 },
     { field: 'name', headerName: 'Name', width: 320 },
     { field: 'description', headerName: 'Description', width: 400 },
     { field: 'url', headerName: 'URL', width: 240 },
-    { field: 'isRead', headerName: 'Read', width: 80, renderCell: (params:ValueFormatterParams) => (
+    { field: 'isRead', headerName: 'Read?', width: 80, renderCell: (params:ValueFormatterParams) => (
       params.value ? <CheckBox /> : <CheckBoxOutlineBlank />
-    )}
+    )},
+    { field: 'isCategory', headerName: 'Category?', width: 80, renderCell: (params:ValueFormatterParams) => (
+      params.value ? <CheckBox /> : <CheckBoxOutlineBlank />
+    )},
+    { field: "refersTo", headerName: 'Refers to', width: 400 },
+    { field: "referedBy", headerName: 'Referred by', width: 400 }
   ];
 
   const rows = state.map((memo) => {
@@ -41,7 +46,10 @@ export const MemoList = () => {
       name: memo.name,
       description: memo.description,
       url: memo.url,
-      isRead: memo.isRead
+      isRead: memo.isRead,
+      isCategory: memo.isCategory,
+      refersTo: memo.refersTo,
+      referredBy: memo.referredBy
     }
   })
 
