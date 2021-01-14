@@ -14,7 +14,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export const MemoDataGrid = () => {
+type ItemHandler = {
+  onClick: (memo: Memo) => void
+}
+
+export const MemoDataGrid = ({onClick}: ItemHandler) => {
   const classes = useStyles()
   const {state, dispatch} = useContext(MemoContext)
 
@@ -26,10 +30,10 @@ export const MemoDataGrid = () => {
   };
 
   const columns: ColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
     { field: 'name', headerName: 'Name', width: 320 },
     { field: 'description', headerName: 'Description', width: 400 },
     { field: 'url', headerName: 'URL', width: 240 },
+    { field: 'id', headerName: 'ID', width: 80 },
     { field: 'isRead', headerName: 'Read?', width: 80, renderCell: (params:ValueFormatterParams) => (
       params.value ? <CheckBox /> : <CheckBoxOutlineBlank />
     )},
@@ -54,7 +58,7 @@ export const MemoDataGrid = () => {
   })
 
   const rowClicked = (param: RowParams) => {
-    alert(param.data.id)
+    onClick(param.data as Memo)
   }
 
   return (
