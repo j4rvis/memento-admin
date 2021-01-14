@@ -9,6 +9,7 @@ import { Box, BottomNavigation, BottomNavigationAction,
   Toolbar, List, ListItem, ListItemText, useMediaQuery } from '@material-ui/core';
 import { Restore, Favorite, LocationOn, Add, Close as CloseIcon} from '@material-ui/icons';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import ClosableDialog from './components/CloseableDialog';
 
 const BOTTOM_NAV_HEIGHT = 56;
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,13 +57,6 @@ const App = () => {
   const [focussedMemo, setFocussedMemo] = React.useState({} as Memo)
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  
-  const gridItemClickHandler = (memo: Memo) => {
-    setDetailViewOpen(true);
-    // get Memo from context for updates
-    const item = state.filter(item => item.id === memo.id)
-    setFocussedMemo(item[0])
-  }
 
   const handleClose = () => {setDetailViewOpen(false)}
 
@@ -72,8 +66,6 @@ const App = () => {
     return memos.map(memo => {
       const itemClickHandler = () => {
         setDetailViewOpen(true);
-        // get Memo from context for updates
-        // const item = state.filter(item => item.id === memo.id)
         setFocussedMemo(memo)
       }
       return (
@@ -86,48 +78,22 @@ const App = () => {
 
   return (
     <MemoContextProvider>
-      <Dialog fullScreen={fullScreen} open={detailViewOpen} onClose={handleClose}>
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {focussedMemo.name}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Box className={classes.detailViewContent}>
-          <MemoView memo={focussedMemo}/>
-        </Box>
-      </Dialog>
-      <Dialog fullScreen={fullScreen} open={addMemoOpen} onClose={handleAddMemoClose}>
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleAddMemoClose} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              Add Memo
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Box className={classes.detailViewContent}>
-          <MemoForm />
-        </Box>
-      </Dialog>
       <Box className={classes.root}>
         <List>
           {memoList(state)}
         </List>
-        {/* <MemoDataGrid onClick={gridItemClickHandler}/> */}
-        {/* <MemoForm prefilledMemo={state[0]}/> */}
       </Box>
       <BottomNavigation className={classes.bottomNav} showLabels >
         <BottomNavigationAction label="List" icon={<Restore />} />
         <BottomNavigationAction label="Favorites" icon={<Favorite />} />
         <BottomNavigationAction label="Nearby" icon={<LocationOn />} />
       </BottomNavigation>
+      <ClosableDialog open={detailViewOpen} title={focussedMemo.name} onCloseHandler={handleClose}>
+        <MemoView memo={focussedMemo}/>
+      </ClosableDialog>
+      <ClosableDialog open={addMemoOpen} title="Add Memo" onCloseHandler={handleAddMemoClose}>
+        <MemoForm />
+      </ClosableDialog>
       <Fab className={classes.fab} color="primary" aria-label="add" onClick={() => setAddMemoOpen(true)}>
         <Add />
       </Fab>

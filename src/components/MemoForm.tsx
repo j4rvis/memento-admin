@@ -54,27 +54,23 @@ export const MemoForm = ({prefilledMemo}: FormProps) => {
 
   const classes = useStyles()
   return (
-    <Card>
-      <CardContent >
-        <form className={classes.root} autoComplete="off">
-          <TextField label='Name' multiline variant='outlined' onChange={handleChange} value={memo.name} name="name"/>
-          <TextField label='Description' multiline variant='outlined' onChange={handleChange} value={memo.description} name="description"/>        
-          <TextField label='URL' multiline variant='outlined' onChange={handleChange} value={memo.url} name="url"/>
-          <FormControlLabel
-            control={
-              <Checkbox color="primary" onChange={handleChange} value={String(memo.isRead)} name="isRead" />
-            } 
-            label="IsRead"/>
-          <FormControlLabel
-            control={
-              <Checkbox color="primary" onChange={handleChange} value={String(memo.isCategory)} name="isCategory" />
-            } 
-            label="IsCategory"/>
-          { dateLabels(memo.createdAt, 'CreatedAt') }
-          { dateLabels(memo.updatedAt, 'UpdatedAt') }
-          <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
-        </form>
-      </CardContent>
-    </Card>
+    <form className={classes.root} autoComplete="off">
+      <TextField label='Name' multiline variant='outlined' onChange={handleChange} value={memo.name} name="name"/>
+      <TextField label='Description' multiline variant='outlined' onChange={handleChange} value={memo.description} name="description"/>        
+      <TextField label='URL' multiline variant='outlined' onChange={handleChange} value={memo.url} name="url"/>
+      <FormControlLabel
+        control={
+          <Checkbox color="primary" onChange={handleChange} value={String(memo.isRead)} name="isRead" />
+        } 
+        label="IsRead"/>
+      <FormControlLabel
+        control={
+          <Checkbox color="primary" onChange={handleChange} value={String(memo.isCategory)} name="isCategory" />
+        } 
+        label="IsCategory"/>
+      { dateLabels(memo.createdAt, 'CreatedAt') }
+      { dateLabels(memo.updatedAt, 'UpdatedAt') }
+      <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
+    </form>
   )
 }
