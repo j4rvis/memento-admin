@@ -11,6 +11,13 @@ import { Restore, Favorite, LocationOn, Add, Close as CloseIcon} from '@material
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import ClosableDialog from './components/CloseableDialog';
 
+const NAV_LEFT_ACTION_VALUE = 'NAV_LEFT'
+const NAV_LEFT_ACTION_LABEL = 'All'
+const NAV_MIDDLE_ACTION_VALUE = 'NAV_MIDDLE'
+const NAV_MIDDLE_ACTION_LABEL = 'Journal'
+const NAV_RIGHT_ACTION_VALUE = 'NAV_RIGHT'
+const NAV_RIGHT_ACTION_LABEL = 'Graph'
+
 const BOTTOM_NAV_HEIGHT = 56;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,19 +55,23 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
 const App = () => {
   const classes = useStyles();
   const {state, dispatch} = useContext(MemoContext)
   const [detailViewOpen, setDetailViewOpen] = React.useState(false);
   const [addMemoOpen, setAddMemoOpen] = React.useState(false);
   const [focussedMemo, setFocussedMemo] = React.useState({} as Memo)
+  const [navValue, setNavValue] = React.useState(NAV_LEFT_ACTION_VALUE)
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleClose = () => {setDetailViewOpen(false)}
 
   const handleAddMemoClose = () => {setAddMemoOpen(false)}
+
+  const handleNavChange = (event: React.ChangeEvent<{}>, newValue: any) => {
+    setNavValue(newValue)
+  }
 
   const memoList = (memos: Memo[]) => {
     return memos.map(memo => {
@@ -76,17 +87,34 @@ const App = () => {
     })
   }
 
+  const drawContent = (navValue: String) => {
+    switch(navValue) {
+      case NAV_LEFT_ACTION_VALUE:
+        return (
+          <List>
+            {memoList(state)}
+          </List>
+        )
+      case NAV_MIDDLE_ACTION_VALUE:
+        return (
+          <div>{NAV_MIDDLE_ACTION_LABEL}</div>
+        )
+      case NAV_RIGHT_ACTION_VALUE:
+        return (
+          <div>{NAV_RIGHT_ACTION_LABEL}</div>
+        )
+    }
+  }
+
   return (
     <MemoContextProvider>
       <Box className={classes.root}>
-        <List>
-          {memoList(state)}
-        </List>
+        {drawContent(navValue)}
       </Box>
-      <BottomNavigation className={classes.bottomNav} showLabels >
-        <BottomNavigationAction label="List" icon={<Restore />} />
-        <BottomNavigationAction label="Favorites" icon={<Favorite />} />
-        <BottomNavigationAction label="Nearby" icon={<LocationOn />} />
+      <BottomNavigation value={navValue} onChange={handleNavChange} className={classes.bottomNav} showLabels >
+        <BottomNavigationAction value={NAV_LEFT_ACTION_VALUE} label={NAV_LEFT_ACTION_LABEL} icon={<Restore />} />
+        <BottomNavigationAction value={NAV_MIDDLE_ACTION_VALUE} label={NAV_MIDDLE_ACTION_LABEL} icon={<Favorite />} />
+        <BottomNavigationAction value={NAV_RIGHT_ACTION_VALUE} label={NAV_RIGHT_ACTION_LABEL} icon={<LocationOn />} />
       </BottomNavigation>
       <ClosableDialog open={detailViewOpen} title={focussedMemo.name} onCloseHandler={handleClose}>
         <MemoView memo={focussedMemo}/>

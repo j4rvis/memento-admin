@@ -43,8 +43,18 @@ type Action = {
 const reducer = (state: typeof loremIpsumState, action: Action) => {
     switch (action.type) {
         case ActionType.Add:
+            /** 
+             * POST new memo
+             * GET all memos (async)
+             * return new memos state (async)
+            */
             return [...state, action.payload]
         case ActionType.Update:
+            /** 
+             * POST update memo
+             * GET all memos (async)
+             * return new memos state (async)
+            */
             return state.map((memo: Memo) => {
                 if (memo.id === action.payload.id) {
                     memo = action.payload
@@ -52,6 +62,11 @@ const reducer = (state: typeof loremIpsumState, action: Action) => {
                 return memo
             })
         case ActionType.Delete: 
+            /** 
+             * DELETE memo
+             * GET all memos (async)
+             * return new memos state (async)
+            */
             return state.filter((memo: Memo) => memo.id !== action.payload)
         default:
             return state
