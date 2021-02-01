@@ -1,14 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
+import MemoAPIClient from "../context/MemoAPIClient";
 
-export interface IMemo {
+export interface Memo {
   id: string
-  name: string
-  description: string
-  url: string
-  isRead: boolean
+  title: string
+  text: string
+  // url: string
+  // isRead: boolean
   isCategory: boolean
   refersTo: Memo[]
   referredBy: Memo[]
-  createdAt: Date
-  updatedAt: Date
+  created_at: Date
+  updated_at: Date
 }

@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { Box, Typography } from "@material-ui/core";
-import { IMemo } from "../models/Memo";
+import { Memo } from "../models/Memo";
 
 type ViewProps = {
-  memo: IMemo
+  memo: Memo
 }
 
 type TextAreaProps = {
@@ -19,17 +19,17 @@ const TextArea = ({label, content}: TextAreaProps) => (
 )
 
 export const MemoView = ({memo}: ViewProps) => {
-
+  console.log("Memo:", memo)
   return (
     <Box>
-      <TextArea label='ID' content={memo.id}></TextArea>
-      <TextArea label='Name' content={memo.name}></TextArea>
-      <TextArea label='Description' content={memo.description}></TextArea>
-      <TextArea label='URL' content={memo.url}></TextArea>
-      <TextArea label='Read?' content={String(memo.isRead)}></TextArea>
-      <TextArea label='Category?' content={String(memo.isCategory)}></TextArea>
-      <TextArea label='CreatedAt' content={String(memo.createdAt)}></TextArea>
-      <TextArea label='UpdatedAt' content={String(memo.updatedAt)}></TextArea>
+      {/* <TextArea label='ID' content={memo.id}></TextArea> */}
+      <TextArea label='Title' content={memo.title}></TextArea>
+      <TextArea label='Text' content={memo.text}></TextArea>
+      {/* <TextArea label='URL' content={memo.url}></TextArea>
+      <TextArea label='Read?' content={String(memo.isRead)}></TextArea> */}
+      <TextArea label='Category?' content={memo.isCategory ? "Yes" : "No"}></TextArea>
+      <TextArea label='CreatedAt' content={String(memo.created_at)}></TextArea>
+      <TextArea label='UpdatedAt' content={String(memo.updated_at)}></TextArea>
 
     </Box>
   )

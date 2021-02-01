@@ -1,15 +1,19 @@
 import React, { useState, useContext, FormEvent, ChangeEvent } from "react";
-import { MemoContext, ActionType } from "../context/MemoContextProvider";
-import { IMemo as Memo } from "../models/Memo";
-import { Card, Button, Checkbox, FormControlLabel, TextField, CardContent, Grid, makeStyles, Theme, createStyles, Typography, Box} from '@material-ui/core';
+import { MemoContext} from "../context/MemoContextProvider";
+import { Memo } from "../models/Memo";
+import { Button, Checkbox, FormControlLabel, TextField, makeStyles, Theme, createStyles, Typography, Box} from '@material-ui/core';
+import { v4 as uuidv4 } from "uuid";
 
 type FormProps = {
-  prefilledMemo?: Memo
+  prefilledMemo?: Memo,
+  triggerCloseEvent?: () => void
 }
 
-export const MemoForm = ({prefilledMemo}: FormProps) => {
-  const {dispatch} = useContext(MemoContext)
-  const [memo, setMemo] = useState(prefilledMemo || {} as Memo)
+export const MemoForm = ({prefilledMemo, triggerCloseEvent}: FormProps) => {
+  const {addMemo} = useContext(MemoContext)
+  const [memo, setMemo] = useState(prefilledMemo || {
+    id: uuidv4()
+  } as Memo)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMemo({
@@ -20,14 +24,11 @@ export const MemoForm = ({prefilledMemo}: FormProps) => {
 
   const handleAddMemo = (e: FormEvent) => {
     e.preventDefault()
-    alert(JSON.stringify(memo, null, 4))
-
-    // dispatch({
-    //   type: ActionType.Add,
-    //   payload: memo,
-    // });
-
-    // resetInput();
+    // TODO: Check if the required fields are given!
+    addMemo(memo)
+    if (triggerCloseEvent) {
+      triggerCloseEvent()
+    }
   };
 
   const dateLabels = (date: Date, label: string) => {
@@ -55,21 +56,21 @@ export const MemoForm = ({prefilledMemo}: FormProps) => {
   const classes = useStyles()
   return (
     <form className={classes.root} autoComplete="off">
-      <TextField label='Name' multiline variant='outlined' onChange={handleChange} value={memo.name} name="name"/>
-      <TextField label='Description' multiline variant='outlined' onChange={handleChange} value={memo.description} name="description"/>        
-      <TextField label='URL' multiline variant='outlined' onChange={handleChange} value={memo.url} name="url"/>
-      <FormControlLabel
+      <TextField label='Title' multiline variant='outlined' onChange={handleChange} value={memo.title} name="title"/>
+      <TextField label='Text' multiline variant='outlined' onChange={handleChange} value={memo.text} name="text"/>        
+      {/* <TextField label='URL' multiline variant='outlined' onChange={handleChange} value={memo.url} name="url"/> */}
+      {/* <FormControlLabel
         control={
           <Checkbox color="primary" onChange={handleChange} value={String(memo.isRead)} name="isRead" />
         } 
-        label="IsRead"/>
+        label="IsRead"/> */}
       <FormControlLabel
         control={
           <Checkbox color="primary" onChange={handleChange} value={String(memo.isCategory)} name="isCategory" />
         } 
         label="IsCategory"/>
-      { dateLabels(memo.createdAt, 'CreatedAt') }
-      { dateLabels(memo.updatedAt, 'UpdatedAt') }
+      { dateLabels(memo.created_at, 'CreatedAt') }
+      { dateLabels(memo.updated_at, 'UpdatedAt') }
       <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
     </form>
   )

@@ -1,12 +1,11 @@
-import React, { memo, useContext } from 'react'
-import { MemoDataGrid } from './components/MemoDataGrid';
+import React, { useContext, useEffect } from 'react'
 import { MemoForm } from './components/MemoForm';
 import { MemoView } from './components/MemoView';
-import { IMemo as Memo} from "./models/Memo";
-import { MemoContext, MemoContextProvider } from "./context/MemoContextProvider";
+import { Memo} from "./models/Memo";
+import { MemoContext } from "./context/MemoContextProvider";
 import { Box, BottomNavigation, BottomNavigationAction, 
-  Fab, Dialog, AppBar, Button, Typography, IconButton, 
-  Toolbar, List, ListItem, ListItemText, useMediaQuery } from '@material-ui/core';
+  Fab, List, ListItem, ListItemText, useMediaQuery, Backdrop, CircularProgress } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { Restore, Favorite, LocationOn, Add, Close as CloseIcon} from '@material-ui/icons';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import ClosableDialog from './components/CloseableDialog';
@@ -57,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App = () => {
   const classes = useStyles();
-  const {state, dispatch} = useContext(MemoContext)
+  const {memos, isSyncing, isSynced, error, addMemo, deleteMemo, syncMemos} = useContext(MemoContext)
   const [detailViewOpen, setDetailViewOpen] = React.useState(false);
   const [addMemoOpen, setAddMemoOpen] = React.useState(false);
   const [focussedMemo, setFocussedMemo] = React.useState({} as Memo)
@@ -73,15 +72,22 @@ const App = () => {
     setNavValue(newValue)
   }
 
+  useEffect(() => {
+    if (!isSyncing && !isSynced) {
+      syncMemos()
+    }
+  })
+
   const memoList = (memos: Memo[]) => {
     return memos.map(memo => {
       const itemClickHandler = () => {
         setDetailViewOpen(true);
         setFocussedMemo(memo)
       }
+      const secondary = memo.text ? memo.text.substr(0,100) : ""
       return (
-        <ListItem button onClick={itemClickHandler}>
-          <ListItemText primary={memo.name} secondary={memo.url}/>
+        <ListItem key={memo.id} button onClick={itemClickHandler}>
+          <ListItemText primary={memo.title} secondary={secondary}/>
         </ListItem>
       )
     })
@@ -92,7 +98,7 @@ const App = () => {
       case NAV_LEFT_ACTION_VALUE:
         return (
           <List>
-            {memoList(state)}
+            {memoList(memos)}
           </List>
         )
       case NAV_MIDDLE_ACTION_VALUE:
@@ -107,7 +113,9 @@ const App = () => {
   }
 
   return (
-    <MemoContextProvider>
+    <div>
+      <Backdrop open={isSyncing}><CircularProgress /></Backdrop>
+      {error !== null ? <Alert severity="error">This is an error message!</Alert> : ''}
       <Box className={classes.root}>
         {drawContent(navValue)}
       </Box>
@@ -116,16 +124,16 @@ const App = () => {
         <BottomNavigationAction value={NAV_MIDDLE_ACTION_VALUE} label={NAV_MIDDLE_ACTION_LABEL} icon={<Favorite />} />
         <BottomNavigationAction value={NAV_RIGHT_ACTION_VALUE} label={NAV_RIGHT_ACTION_LABEL} icon={<LocationOn />} />
       </BottomNavigation>
-      <ClosableDialog open={detailViewOpen} title={focussedMemo.name} onCloseHandler={handleClose}>
+      <ClosableDialog open={detailViewOpen} title={focussedMemo.title} onCloseHandler={handleClose}>
         <MemoView memo={focussedMemo}/>
       </ClosableDialog>
       <ClosableDialog open={addMemoOpen} title="Add Memo" onCloseHandler={handleAddMemoClose}>
-        <MemoForm />
+        <MemoForm triggerCloseEvent={handleAddMemoClose}/>
       </ClosableDialog>
       <Fab className={classes.fab} color="primary" aria-label="add" onClick={() => setAddMemoOpen(true)}>
         <Add />
       </Fab>
-    </MemoContextProvider>
+    </div>
   );
 }
 

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import 'fontsource-roboto';
 import reportWebVitals from './reportWebVitals';
+import { MemoContextProvider } from "./context/MemoContextProvider";
 import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 import { green, amber } from '@material-ui/core/colors';
 
@@ -18,7 +19,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
-    <App />
+    <MemoContextProvider>
+      <App />
+    </MemoContextProvider>
   </ThemeProvider>,
   document.getElementById('root')
 );

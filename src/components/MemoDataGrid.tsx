@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { MemoContext, ActionType } from "../context/MemoContextProvider";
-import { IMemo as Memo } from "../models/Memo";
+import { MemoContext } from "../context/MemoContextProvider";
+import { Memo } from "../models/Memo";
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { DataGrid, ColDef, ValueFormatterParams, RowParams } from '@material-ui/data-grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -20,17 +20,10 @@ type ItemHandler = {
 
 export const MemoDataGrid = ({onClick}: ItemHandler) => {
   const classes = useStyles()
-  const {state, dispatch} = useContext(MemoContext)
-
-  const handleDeleteMemo = (memo: Memo) => {
-    dispatch({
-      type: ActionType.Delete,
-      payload: memo,
-    });
-  };
+  const {memos} = useContext(MemoContext)
 
   const columns: ColDef[] = [
-    { field: 'name', headerName: 'Name', width: 320 },
+    { field: 'title', headerName: 'Title', width: 320 },
     { field: 'description', headerName: 'Description', width: 400 },
     { field: 'url', headerName: 'URL', width: 240 },
     { field: 'id', headerName: 'ID', width: 80 },
@@ -44,13 +37,13 @@ export const MemoDataGrid = ({onClick}: ItemHandler) => {
     { field: "referedBy", headerName: 'Referred by', width: 400 }
   ];
 
-  const rows = state.map((memo) => {
+  const rows = memos.map((memo) => {
     return {
       id: memo.id,
-      name: memo.name,
-      description: memo.description,
-      url: memo.url,
-      isRead: memo.isRead,
+      title: memo.title,
+      description: memo.text,
+      // url: memo.url,
+      // isRead: memo.isRead,
       isCategory: memo.isCategory,
       refersTo: memo.refersTo,
       referredBy: memo.referredBy

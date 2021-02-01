@@ -1,8 +1,7 @@
 import React, { useState, useContext, FunctionComponent } from "react";
-import { Box, BottomNavigation, BottomNavigationAction, 
-  Fab, Dialog, AppBar, Button, Typography, IconButton, 
-  Toolbar, List, ListItem, ListItemText, useMediaQuery } from '@material-ui/core';
-import { Restore, Favorite, LocationOn, Add, Close as CloseIcon} from '@material-ui/icons';
+import { Box, Dialog, AppBar, Typography, IconButton, 
+  Toolbar, useMediaQuery } from '@material-ui/core';
+import { Close as CloseIcon} from '@material-ui/icons';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 
 type CloseableDialogProps = {
