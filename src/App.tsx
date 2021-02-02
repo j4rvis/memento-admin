@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { MemoForm } from './components/MemoForm';
 import { MemoView } from './components/MemoView';
-import { Memo} from "./models/Memo";
+import { Memo, Tag } from "./models/Memo";
 import { MemoContext } from "./context/MemoContextProvider";
 import { Box, BottomNavigation, BottomNavigationAction, 
   Fab, List, ListItem, ListItemText, useMediaQuery, Backdrop, CircularProgress } from '@material-ui/core';
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App = () => {
   const classes = useStyles();
-  const {memos, isSyncing, isSynced, error, addMemo, deleteMemo, syncMemos} = useContext(MemoContext)
+  const {memos, isSyncing, isSynced, error, addMemo, deleteMemo, syncMemos, syncTags, tags} = useContext(MemoContext)
   const [detailViewOpen, setDetailViewOpen] = React.useState(false);
   const [addMemoOpen, setAddMemoOpen] = React.useState(false);
   const [focussedMemo, setFocussedMemo] = React.useState({} as Memo)
@@ -75,6 +75,7 @@ const App = () => {
   useEffect(() => {
     if (!isSyncing && !isSynced) {
       syncMemos()
+      syncTags()
     }
   })
 
@@ -83,7 +84,7 @@ const App = () => {
       const itemClickHandler = () => {
         setDetailViewOpen(true);
         setFocussedMemo(memo)
-      }
+      } 
       const secondary = memo.text ? memo.text.substr(0,100) : ""
       return (
         <ListItem key={memo.id} button onClick={itemClickHandler}>
@@ -108,6 +109,10 @@ const App = () => {
       case NAV_RIGHT_ACTION_VALUE:
         return (
           <div>{NAV_RIGHT_ACTION_LABEL}</div>
+        )
+      default:
+        return (
+          <div></div>
         )
     }
   }

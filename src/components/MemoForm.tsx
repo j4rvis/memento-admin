@@ -1,8 +1,8 @@
 import React, { useState, useContext, FormEvent, ChangeEvent } from "react";
 import { MemoContext} from "../context/MemoContextProvider";
-import { Memo } from "../models/Memo";
-import { Button, Checkbox, FormControlLabel, TextField, makeStyles, Theme, createStyles, Typography, Box} from '@material-ui/core';
-import { v4 as uuidv4 } from "uuid";
+import { Memo, Tag, FormSubmitMemo } from "../models/Memo";
+import { Button, TextField, makeStyles, Theme, createStyles, Typography, Box} from '@material-ui/core';
+import { Autocomplete, Alert} from '@material-ui/lab';
 
 type FormProps = {
   prefilledMemo?: Memo,
@@ -10,10 +10,13 @@ type FormProps = {
 }
 
 export const MemoForm = ({prefilledMemo, triggerCloseEvent}: FormProps) => {
-  const {addMemo} = useContext(MemoContext)
-  const [memo, setMemo] = useState(prefilledMemo || {
-    id: uuidv4()
-  } as Memo)
+  const {memos, addMemo, tags} = useContext(MemoContext)
+  const [memo, setMemo] = useState({} as FormSubmitMemo)
+
+  const [referredMemos, setReferredMemos] = useState([] as Memo[])
+  const [selectedTags, setSelectedTags] = useState([] as Tag[])
+
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMemo({
@@ -24,13 +27,33 @@ export const MemoForm = ({prefilledMemo, triggerCloseEvent}: FormProps) => {
 
   const handleAddMemo = (e: FormEvent) => {
     e.preventDefault()
-    // TODO: Check if the required fields are given!
-    addMemo(memo)
-    if (triggerCloseEvent) {
-      triggerCloseEvent()
+    
+    if(!memo.title) {
+      setErrorMessage("A Title is required.")
+      return;
     }
+
+    const tmpMemo: FormSubmitMemo = {
+      ...memo,
+      refersTo: referredMemos.map(r=>r.id),
+      tags: selectedTags.map(r=>r.id)
+    }
+    setMemo(tmpMemo)
+
+    console.log("POST memo", tmpMemo)
+    addMemo(tmpMemo)
+    // if (triggerCloseEvent) {
+    //   triggerCloseEvent()
+    // }
   };
 
+  const handleRefersToChanged = (e: any, value: Memo[]) => {
+    setReferredMemos(value)
+  }
+  
+  const handleTagsChanged = (e: any, value: Tag[]) => {
+    setSelectedTags(value)
+  }
   const dateLabels = (date: Date, label: string) => {
     if (!date) return
     return (
@@ -56,21 +79,27 @@ export const MemoForm = ({prefilledMemo, triggerCloseEvent}: FormProps) => {
   const classes = useStyles()
   return (
     <form className={classes.root} autoComplete="off">
-      <TextField label='Title' multiline variant='outlined' onChange={handleChange} value={memo.title} name="title"/>
+      {errorMessage !== "" ? <Alert variant="outlined" severity="error">{errorMessage}</Alert> : ''}
+      <TextField label='Title' multiline variant='outlined' onChange={handleChange} value={memo.title} name="title" required/>
       <TextField label='Text' multiline variant='outlined' onChange={handleChange} value={memo.text} name="text"/>        
-      {/* <TextField label='URL' multiline variant='outlined' onChange={handleChange} value={memo.url} name="url"/> */}
-      {/* <FormControlLabel
-        control={
-          <Checkbox color="primary" onChange={handleChange} value={String(memo.isRead)} name="isRead" />
-        } 
-        label="IsRead"/> */}
-      <FormControlLabel
-        control={
-          <Checkbox color="primary" onChange={handleChange} value={String(memo.isCategory)} name="isCategory" />
-        } 
-        label="IsCategory"/>
-      { dateLabels(memo.created_at, 'CreatedAt') }
-      { dateLabels(memo.updated_at, 'UpdatedAt') }
+      {/* { dateLabels(memo.created_at, 'CreatedAt') }
+      { dateLabels(memo.updated_at, 'UpdatedAt') } */}
+      <Autocomplete
+        options={memos}
+        onChange={handleRefersToChanged}
+        getOptionLabel={(option) => option.title}
+        filterSelectedOptions
+        multiple
+        renderInput={(params) => <TextField {...params} label="Relates to" variant="outlined" />}
+      />
+      <Autocomplete
+        onChange={handleTagsChanged}
+        options={tags}
+        getOptionLabel={(option) => option.name}
+        filterSelectedOptions
+        multiple
+        renderInput={(params) => <TextField {...params} label="Tags" variant="outlined" />}
+      />
       <Button variant="contained" color="primary" onClick={handleAddMemo}>Add Memo</Button>
     </form>
   )

@@ -29,7 +29,6 @@ const ClosableDialog: FunctionComponent<CloseableDialogProps> = ({open, onCloseH
     }),
   );
   const classes = useStyles();
-  // const {open, onCloseHandler, title, children} = dialogProps
   return (
     <Dialog fullScreen={fullScreen} open={open} onClose={onCloseHandler}>
       <AppBar className={classes.appBar}>
