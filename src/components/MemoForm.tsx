@@ -1,6 +1,6 @@
 import React, { useState, useContext, FormEvent, ChangeEvent } from "react";
 import { MemoContext} from "../context/MemoContextProvider";
-import { Memo, Tag, FormSubmitMemo } from "../models/Memo";
+import { Memo, Tag, FormSubmitMemo } from "../models/Models";
 import { Button, TextField, makeStyles, Theme, createStyles, Typography, Box} from '@material-ui/core';
 import { Autocomplete, Alert} from '@material-ui/lab';
 

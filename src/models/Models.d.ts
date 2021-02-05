@@ -8,8 +8,8 @@ export interface Memo {
   refersTo: Memo[]
   referredBy: Memo[]
   tags: Tag[]
-  created_at: Date
-  updated_at: Date
+  created_at: string
+  updated_at: string
 }
 
 export interface FormSubmitMemo {

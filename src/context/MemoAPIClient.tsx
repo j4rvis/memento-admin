@@ -1,6 +1,6 @@
 import { responsiveFontSizes } from '@material-ui/core'
 import { Http, NoSimRounded } from '@material-ui/icons'
-import { Memo, Tag, FormSubmitMemo } from '../models/Memo'
+import { Memo, Tag, FormSubmitMemo } from '../models/Models'
 
 export const MEMO_PATH = "https://admin.schwarz-micha.de/memos?_sort=updated_at:DESC"
 export const TAG_PATH = "https://admin.schwarz-micha.de/tags/"

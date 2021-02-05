@@ -10,7 +10,7 @@ type CloseableDialogProps = {
   title: string
 }
 
-const ClosableDialog: FunctionComponent<CloseableDialogProps> = ({open, onCloseHandler, title, children}) => {
+export const ClosableDialog: FunctionComponent<CloseableDialogProps> = ({open, onCloseHandler, title, children}) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
@@ -47,5 +47,3 @@ const ClosableDialog: FunctionComponent<CloseableDialogProps> = ({open, onCloseH
     </Dialog>
   )
 }
-
-export default ClosableDialog;

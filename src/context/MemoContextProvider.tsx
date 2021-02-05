@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormSubmitMemo, Memo, Tag } from '../models/Memo'
+import { FormSubmitMemo, Memo, Tag } from '../models/Models'
 import memoAPI from './MemoAPIClient'
 
 interface IMemoContext {
