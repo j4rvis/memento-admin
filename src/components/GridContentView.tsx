@@ -11,10 +11,8 @@ const useStyles = makeStyles((theme: Theme) =>
       boxSizing: 'border-box',
       padding: theme.spacing(2),
       display: 'grid',
-      // gridTemplateColumns: 'repeat(6, 1fr)',
       gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr) )",
       gap: theme.spacing(3),
-      // backgroundColor: 'green'
     },
   })
 )
