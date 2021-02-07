@@ -1,6 +1,6 @@
 import { responsiveFontSizes } from '@material-ui/core'
 import { Http, NoSimRounded } from '@material-ui/icons'
-import { Memo, Tag, FormSubmitMemo } from '../models/Models'
+import { Memo, Tag, FormSubmitMemo, SimplyfiedSubmitMemo } from '../models/Models'
 
 export const MEMO_PATH = "https://admin.schwarz-micha.de/memos?_sort=updated_at:DESC"
 export const TAG_PATH = "https://admin.schwarz-micha.de/tags/"
@@ -35,7 +35,7 @@ const GetAllTags = (): Promise<Tag[]> => {
     })
 }
 
-const AddMemo = (memo: FormSubmitMemo): Promise<Memo> => {
+const AddMemo = (memo: FormSubmitMemo | SimplyfiedSubmitMemo): Promise<Memo> => {
   return fetch(MEMO_PATH, {
     method: 'POST',
     body: JSON.stringify(memo)

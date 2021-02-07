@@ -19,6 +19,11 @@ export interface FormSubmitMemo {
   tags: number[]
 }
 
+export interface SimplyfiedSubmitMemo {
+  text: string
+  tags: number[]
+}
+
 export interface Tag {
   id: number
   name: string

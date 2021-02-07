@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormSubmitMemo, Memo, Tag } from '../models/Models'
+import { FormSubmitMemo, Memo, SimplyfiedSubmitMemo, Tag } from '../models/Models'
 import memoAPI from './MemoAPIClient'
 
 interface IMemoContext {
@@ -7,7 +7,7 @@ interface IMemoContext {
     isSyncing: boolean,
     isSynced: boolean,
     error: Error | null
-    addMemo: (memo: FormSubmitMemo) => void,
+    addMemo: (memo: FormSubmitMemo | SimplyfiedSubmitMemo) => void,
     deleteMemo: (memo: Memo) => void
     syncMemos: () => void,
     tags: Tag[],
@@ -19,7 +19,7 @@ export const MemoContext = React.createContext<IMemoContext>({
     isSynced: false,
     isSyncing: false,
     error: null,
-    addMemo: (memo: FormSubmitMemo) => null,
+    addMemo: (memo: FormSubmitMemo | SimplyfiedSubmitMemo) => null,
     deleteMemo: (memo: Memo) => null,
     syncMemos: () => null,
     tags: [],
@@ -33,7 +33,7 @@ export const MemoContextProvider: React.FC = (props) => {
     const [error, setError] = React.useState(null)
     const [tags, setTags] = React.useState([] as Tag[])
 
-    const addMemo = (memo: FormSubmitMemo) => {
+    const addMemo = (memo: FormSubmitMemo | SimplyfiedSubmitMemo) => {
         setIsSyncing(true);
         memoAPI.AddMemo(memo)
         setIsSynced(false)
