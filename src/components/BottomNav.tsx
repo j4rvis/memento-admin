@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction, Button, Fab } from '@material-ui/core';
 import { Restore, Favorite, LocationOn, Add, Close as CloseIcon} from '@material-ui/icons';
 
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
@@ -12,7 +12,8 @@ export enum NavIndex {
 
 type BottomNavProps = {
   selectedIndex: NavIndex,
-  onChange: (current: NavIndex, prev: NavIndex) => void
+  onChange: (current: NavIndex, prev: NavIndex) => void,
+  isMobile: boolean
 }
 
 const NAV_LEFT_ACTION_LABEL = 'All'
@@ -29,12 +30,12 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       right: 0,
       height: BOTTOM_NAV_HEIGHT
-    },
+    }
   }),
 );
 
 export const BottomNav = ({ selectedIndex, onChange }: BottomNavProps ) => {
-  // const classes = useStyles()
+  const classes = useStyles()
 
   const [navIndex, setNavIndex] = useState(selectedIndex)
 
@@ -45,7 +46,7 @@ export const BottomNav = ({ selectedIndex, onChange }: BottomNavProps ) => {
   }
 
   return (
-    <BottomNavigation value={navIndex} onChange={handleChange} showLabels >
+    <BottomNavigation className={classes.bottomNav} value={navIndex} onChange={handleChange} showLabels >
       <BottomNavigationAction value={NavIndex.Left} label={NAV_LEFT_ACTION_LABEL} icon={<Restore />} />
       <BottomNavigationAction value={NavIndex.Middle} label={NAV_MIDDLE_ACTION_LABEL} icon={<Favorite />} />
       <BottomNavigationAction value={NavIndex.Right} label={NAV_RIGHT_ACTION_LABEL} icon={<LocationOn />} />

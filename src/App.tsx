@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { memo, useContext, useEffect } from 'react'
 import { MemoForm } from './components/MemoForm';
 import { MemoView } from './components/MemoView';
 import { BottomNav, NavIndex } from './components/BottomNav';
@@ -10,7 +10,6 @@ import { Alert } from '@material-ui/lab';
 import { Restore, Favorite, LocationOn, Add, Close as CloseIcon} from '@material-ui/icons';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { ClosableDialog } from './components/CloseableDialog';
-// import { ListContentView } from './components/ListContentView';
 import { SimplifiedMemoForm } from './components/SimplifiedMemoForm';
 import { GridContentView } from './components/GridContentView';
 
@@ -18,7 +17,7 @@ const BOTTOM_NAV_HEIGHT = 56;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-
+      paddingBottom: BOTTOM_NAV_HEIGHT
     },
     content: {
       flexGrow: 1
@@ -33,10 +32,21 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App = () => {
   const classes = useStyles();
+  const theme = useTheme();
+
   const {isSyncing, isSynced, error, memos, addMemo, deleteMemo, syncMemos, syncTags, tags} = useContext(MemoContext)
+  
+  const [state, setState] = React.useState({
+    isEditViewOpen: false,
+    isDetailViewOpen: false,
+    isMobile: useMediaQuery(theme.breakpoints.down('sm')),
+    navIndex: NavIndex.Left,
+    focussedMemo: {}
+  })
   const [addMemoOpen, setAddMemoOpen] = React.useState(false);
   const [navValue, setNavValue] = React.useState(NavIndex.Left)
-  const theme = useTheme();
+  const [focussedMemo, setFocussedMemo] = React.useState({} as Memo)
+  const [isDetailViewOpen, setIsDetailViewOpen] = React.useState(false)
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleNavChange = (current: NavIndex, prev: NavIndex) => {
@@ -50,14 +60,62 @@ const App = () => {
     }
   })
 
+  const handleCardClick = (memo: Memo) => {
+    setState({
+      ...state,
+      focussedMemo: memo,
+      isDetailViewOpen: true
+    })
+  }
+
+  const handleCardDeleteClick = () => {
+    console.log("Delete memo")
+    deleteMemo(focussedMemo)
+    setState({
+      ...state,
+      focussedMemo: {},
+      isDetailViewOpen: false
+    })
+    // setFocussedMemo({} as Memo)
+    // setIsDetailViewOpen(false)
+  }
+
+  const handleCardEditClick = () => {
+    setState({
+      ...state,
+      isEditViewOpen: true,
+      isDetailViewOpen: false
+    })
+    // setIsDetailViewOpen(false)
+    // setAddMemoOpen(true)
+  }
+
+  const handleDetailViewClose = () => {
+    console.log("Close")
+    setState({
+      ...state,
+      focussedMemo: {},
+      isDetailViewOpen: false
+    })
+    // setFocussedMemo({} as Memo)
+    // setIsDetailViewOpen(false)
+  }
+
   return (
     <Box className={classes.root}>
-      <GridContentView></GridContentView>
-      <BottomNav selectedIndex={NavIndex.Left} onChange={handleNavChange}></BottomNav>
+      <GridContentView handleCardClick={handleCardClick}></GridContentView>
+      <BottomNav isMobile={isMobile} selectedIndex={NavIndex.Left} onChange={handleNavChange}></BottomNav>
       <Backdrop open={isSyncing}><CircularProgress /></Backdrop>
       {error !== null ? <Alert severity="error">This is an error message!</Alert> : ''}
-      <ClosableDialog open={addMemoOpen} title="Add Memo" onCloseHandler={() => setAddMemoOpen(false)}>
-        {/* <MemoForm triggerCloseEvent={() => setAddMemoOpen(false)}/> */}
+      <ClosableDialog 
+        open={isDetailViewOpen} 
+        title='Memo' 
+        handleCloseClick={() => handleDetailViewClose()}
+        handleDeleteClick={() => handleCardDeleteClick()}
+        handleEditClick={() => handleCardEditClick()} >
+        <MemoView memo={focussedMemo}/>
+      </ClosableDialog>
+      <ClosableDialog open={addMemoOpen} title="Add Memo" handleCloseClick={() => setAddMemoOpen(false)}>
         <SimplifiedMemoForm triggerCloseEvent={() => setAddMemoOpen(false)}/>
       </ClosableDialog>
       <Fab className={classes.fab} color="primary" aria-label="add" onClick={() => setAddMemoOpen(true)}>

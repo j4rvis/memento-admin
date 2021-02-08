@@ -13,6 +13,7 @@ export interface Memo {
 }
 
 export interface FormSubmitMemo {
+  id: number
   title: string
   text: string
   refersTo: number[]
@@ -20,6 +21,7 @@ export interface FormSubmitMemo {
 }
 
 export interface SimplyfiedSubmitMemo {
+  id: number
   text: string
   tags: number[]
 }

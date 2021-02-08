@@ -4,7 +4,7 @@ import { MemoContext } from '../context/MemoContextProvider'
 import {Memo, SimplyfiedSubmitMemo, Tag} from '../models/Models'
 
 type ViewProps = {
-  prefiledMemo?: Memo,
+  prefilledMemo?: Memo,
   prefilledTags?: Tag[],
   triggerCloseEvent?: () => void
 }
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
   )
 
-export const SimplifiedMemoForm = ({prefiledMemo, prefilledTags, triggerCloseEvent}: ViewProps) => {
+export const SimplifiedMemoForm = ({prefilledMemo, prefilledTags, triggerCloseEvent}: ViewProps) => {
   const {memos, addMemo, tags} = useContext(MemoContext)
   const [text, setText] = useState("")
   const [url, setUrl] = useState("")
@@ -106,15 +106,16 @@ export const SimplifiedMemoForm = ({prefiledMemo, prefilledTags, triggerCloseEve
     }
 
     const tmpMemo: SimplyfiedSubmitMemo = {
-      text,
+      id: prefilledMemo?.id || -1,
+      text: text,
       tags: selectedTags.map(r=>r.id)
     }
 
     console.log("POST memo", tmpMemo)
     addMemo(tmpMemo)
-    // if (triggerCloseEvent) {
-    //   triggerCloseEvent()
-    // }
+    if (triggerCloseEvent) {
+      triggerCloseEvent()
+    }
   };
 
   const classes = useStyles()

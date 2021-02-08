@@ -67,7 +67,7 @@ export const ContentView = ({viewIndex, isMobile}: ContentViewProps) => {
       return (
         <div>
           <List>{memoList(memos)}</List>
-          <ClosableDialog open={detailViewOpen} title={selectedElement.memo?.title} onCloseHandler={() => setDetailViewOpen(false)}>
+          <ClosableDialog open={detailViewOpen} title={selectedElement.memo?.title} handleCloseClick={() => setDetailViewOpen(false)}>
             <MemoView memo={selectedElement.memo} handleReferenceMemoClick={m => console.log("ref:", m)}/>
           </ClosableDialog>
         </div>

@@ -5,6 +5,7 @@ import { Memo, Tag } from "../models/Models"
 
 type ViewProps = {
   memo: Memo,
+  handleClick: (memo: Memo) => void,
   handleReferenceMemoClick?: (memo: Memo) => void,
   handleTagClick?: (tag: Tag) => void
 }
@@ -12,18 +13,20 @@ type ViewProps = {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       card: {
-        // width: 300,
-        // height: 200
+        borderRadius: theme.spacing(3),
+        padding: theme.spacing(2)
       },
       cardContent: {
-        height: 120,
+        height: 100,
         overflowY: "auto",
+        overflowX: 'hidden',
         scrollbarWidth: 'none',
         '&::-webkit-scrollbar': {
           display: 'none'
         }
       },
       chipList: {
+        paddingTop: theme.spacing(1),
         display: 'flex',
         flexWrap: 'nowrap',
         listStyle: 'none',
@@ -40,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
   )
 
-export const MemoCard = ({memo}: ViewProps) => {
+export const MemoCard = ({memo, handleClick}: ViewProps) => {
     const classes = useStyles()
     
   const drawTagChips = (tags: Tag[]) => {
@@ -63,12 +66,10 @@ export const MemoCard = ({memo}: ViewProps) => {
   }
   return (
     <Card className={classes.card} key={memo.id}>
-      <CardContent>
+      <CardActionArea onClick={() => handleClick(memo)}>
         <Typography className={classes.cardContent} variant='body1'>{memo.text}</Typography>
-        {drawTagChips(memo.tags)}
-      </CardContent>
-      <CardActionArea>
       </CardActionArea>
+      {drawTagChips(memo.tags)}
     </Card>
   )
 }

@@ -3,7 +3,12 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import React from "react"
 import { useContext } from "react"
 import { MemoContext } from "../context/MemoContextProvider"
+import { Memo } from "../models/Models"
 import { MemoCard } from "./MemoCard"
+
+type ViewProps = {
+  handleCardClick: (memo: Memo) => void
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 )
-export const GridContentView = () => {
+export const GridContentView = ({handleCardClick}: ViewProps) => {
   const classes = useStyles()
   const { memos } = useContext(MemoContext)
 
@@ -25,7 +30,7 @@ export const GridContentView = () => {
       return <div>No memos available</div>
     }
     return memos.map(memo => {
-        return <MemoCard key={memo.id} memo={memo}></MemoCard>
+        return <MemoCard key={memo.id} memo={memo} handleClick={handleCardClick}></MemoCard>
     })
   }
 
